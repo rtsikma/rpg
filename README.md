@@ -1,2 +1,1 @@
-# rpg
-CCS Coding 2 Class RPG
+This is the CCS Coding 2 Class Final Project for Gavin and Owen. The purpose of this is to create a primitive RPG with the battle rules built in. This is for learning purposes only. Hopefully, some fun will be had as well.
