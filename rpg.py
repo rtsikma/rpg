@@ -1,23 +1,62 @@
 from pathlib import Path
+from enum import Enum
 
+class BattleResult(Enum):
+    AllyWins = 1
+    EnemyWins = 2
+    BothLose = 3
+
+
+# Lists of characters
+allyList = []
+enemyList = []
 
 class Character:
-    name = ""
-    class_name = ""
-    race = ""
-    hp = 0
-    attack = 0
-    special_attack = 0
-    defence = 0
-    weapon_attack = 0
-    armor_defence = 0
-    mana = 0
-    stamina = 0
-    level = 0
-    ally = False
+    def __init__(self, characterDict):
+        self.name = characterDict['Name']
+        self.class_name = characterDict['Class']
+        self.race = characterDict['Race']
+        self.hp = characterDict['HP']
+        self.attack = characterDict['Attack']
+        self.special_attack = characterDict['Special_Attack']
+        self.defence = characterDict['Defense']
+        self.weapon_attack = characterDict['Weapon_Attack']
+        self.armor_defence = characterDict['Armor_Defense']
+        self.mana = characterDict['Mana']
+        self.stamina = characterDict['Stamina']
+        self.level = characterDict['Level']
+        self.ally = characterDict['Ally']
 
-    def __init__(characterDict):
+    def isAlive(self):
+        return self.hp > 0
+
+    def takeTurn(self, battle):
+        # select move (attack, heal)
+        # select (enemy, ally)
+        # if attack, roll 0 to (Attack + 1) for attack
+        # and select enemy to attack
+
+        # if heal, roll 0 to Special_attack for healing amount
+        # and select ally to heal
         pass
+
+class RpgBattle:
+    def __init__(self, allies, enemies):
+        self.allies = allies
+        self.enemies = enemies
+
+    def battle(self):
+        # while both teams have characters alive
+        while len(self.ally) > 0 and len(self.enemies) > 0:
+            for ally in self.allies:
+                if ally.isAlive():
+                    ally.takeTurn(self.enemies)
+                
+            # do a turn for each ally
+            # do a turn for each enemy
+            # check if a team wins after each turn
+
+        return BattleResult.BothLose
 
 
 def getStatsFromFileText(aFileTextLines):
