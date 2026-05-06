@@ -1,0 +1,12 @@
+Name = Link
+Race = Flamekin
+Class = Rogue
+HP = 11
+Attack = 25
+Defense = 11
+Weapon_Attack = 5
+Special Attk =
+Armor_defense = 2
+Mana = 8
+Stamina = 12
+Level = 1

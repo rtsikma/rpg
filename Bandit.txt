@@ -1,0 +1,12 @@
+name = Bandit
+Race = Human
+Class = Ranger
+HP = 8
+Attack = 21
+Defense = 10
+Weapon_Attack = 5
+Special Attk = 8
+Armor_defense = 2
+Mana = 8
+Stamina = 20
+Level = 1
