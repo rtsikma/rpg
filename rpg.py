@@ -1,5 +1,7 @@
 from pathlib import Path
 from enum import Enum
+import math
+import random
 
 class BattleResult(Enum):
     AllyWins = 1
@@ -11,8 +13,48 @@ class BattleResult(Enum):
 allyList = []
 enemyList = []
 
+class RpgBattle:
+    def __init__(self, allies, enemies):
+        self.allies: list = allies
+        self.enemies: list = enemies
+
+    def allAlliesDead(self) -> bool:
+        for ally in self.allies:
+            if ally.isAlive():
+                return False
+        return True
+
+    def allEnemiesDead(self) -> bool:
+        for foe in self.enemies:
+            if foe.isAlive():
+                return False
+        return True
+
+    def battle(self) -> BattleResult:
+        # while both teams have characters alive
+        while not self.allAlliesDead() or not self.allEnemiesDead():
+            for ally in self.allies:
+                if ally.isAlive():
+                    ally.takeTurn(self)
+            
+            for foe in self.enemies:
+                if foe.isAlive():
+                    foe.takeTurn(self)
+        
+        allEnemiesDead = self.allEnemiesDead()
+        allAlliesDead = self.allAlliesDead()
+        if allEnemiesDead and allAlliesDead:
+            return BattleResult.BothLose
+        elif allEnemiesDead:
+            return BattleResult.AllyWins
+        else:
+            return BattleResult.EnemyWins
+
+
 class Character:
-    def __init__(self, characterDict):
+    def __init__(self,
+                 characterDict: dict
+                ):
         self.name = characterDict['Name']
         self.class_name = characterDict['Class']
         self.race = characterDict['Race']
@@ -29,8 +71,35 @@ class Character:
 
     def isAlive(self):
         return self.hp > 0
+    
+    def battle(self, foe):
+        # Attack Algorithm
+        # Roll for attack value
+        # Roll for defense value
+        # attack * weapon / armor - defense 
 
-    def takeTurn(self, battle):
+        # if attack, roll 0 to (Attack + 1) for attack (attack + 1 is critical hit)
+        attackRoll = random.randint(0, self.attack + 1)
+        if attackRoll == self.attack + 1:
+            attackRoll = int(attackRoll * 1.5)
+        defenseRoll = random.randint(0, foe.defence)
+        attack = attackRoll * self.weapon_attack / foe.armor_defense - defenseRoll
+        foe.hp -= math.max(attack, 0)
+
+    def takeTurn(self, battle: RpgBattle):
+        if self.ally:
+            x = input("Attack (1) or Heal (2): ")
+            if x == 1: # Attack
+                foe = None
+                for foe1 in battle.enemies:
+                    if foe1.isAlive():
+                        foe = foe1
+                if foe != None:
+                    self.battle(foe)
+            if x == 2: # Heal        
+                pass
+        else:
+            pass
         # select move (attack, heal)
         # select (enemy, ally)
         # if attack, roll 0 to (Attack + 1) for attack
@@ -40,26 +109,8 @@ class Character:
         # and select ally to heal
         pass
 
-class RpgBattle:
-    def __init__(self, allies, enemies):
-        self.allies = allies
-        self.enemies = enemies
 
-    def battle(self):
-        # while both teams have characters alive
-        while len(self.ally) > 0 and len(self.enemies) > 0:
-            for ally in self.allies:
-                if ally.isAlive():
-                    ally.takeTurn(self.enemies)
-                
-            # do a turn for each ally
-            # do a turn for each enemy
-            # check if a team wins after each turn
-
-        return BattleResult.BothLose
-
-
-def getStatsFromFileText(aFileTextLines):
+def getStatsFromFileText(aFileTextLines: list):
     charDict = {}
     for line in aFileTextLines:
         (prop, value) = line.split(':')
