@@ -59,6 +59,7 @@ class Character:
         self.class_name = characterDict['Class']
         self.race = characterDict['Race']
         self.hp = characterDict['HP']
+        self.max_hp = self.hp
         self.attack = characterDict['Attack']
         self.special_attack = characterDict['Special_Attack']
         self.defence = characterDict['Defense']
@@ -72,42 +73,47 @@ class Character:
     def isAlive(self):
         return self.hp > 0
     
-    def battle(self, foe):
-        # Attack Algorithm
-        # Roll for attack value
-        # Roll for defense value
-        # attack * weapon / armor - defense 
-
+    def attack(self, target):
         # if attack, roll 0 to (Attack + 1) for attack (attack + 1 is critical hit)
         attackRoll = random.randint(0, self.attack + 1)
+        # This is a Critical Hit!
         if attackRoll == self.attack + 1:
             attackRoll = int(attackRoll * 1.5)
-        defenseRoll = random.randint(0, foe.defence)
-        attack = attackRoll * self.weapon_attack / foe.armor_defense - defenseRoll
-        foe.hp -= math.max(attack, 0)
+        defenseRoll = random.randint(0, target.defence)
+        attackValue = attackRoll * self.weapon_attack / target.armor_defense - defenseRoll
+        target.hp = max(target.hp - attackValue, 0)
+        print(f"{self.name} ATTACKS {target.name} for {attackValue} HP. {target.name} now has {target.hp} HP.")
+
+    def heal(self, target):
+        heal_amount = random.randint(0, self.special_attack)
+        target.hp = min(target.hp + heal_amount, target.max_hp)
+        print(f"{self.name} HEALS {target.name} for {heal_amount} HP. {target.name} now has {target.hp} HP.")
+
+    def findWeakestCharacter(self, charList: list):
+        targets = [character for character in charList if character.isAlive()]
+        if not targets:
+            return ()
+        target = min(targets, key=lambda c: c.hp)
+        return target
 
     def takeTurn(self, battle: RpgBattle):
         if self.ally:
             x = input("Attack (1) or Heal (2): ")
             if x == 1: # Attack
-                foe = None
-                for foe1 in battle.enemies:
-                    if foe1.isAlive():
-                        foe = foe1
-                if foe != None:
-                    self.battle(foe)
+                target = self.findWeakestCharacter(battle.enemies)
+                if not target:
+                    return
+                self.attack(target)
             if x == 2: # Heal        
-                pass
+                target = self.findWeakestCharacter(battle.allies)
+                if not target:
+                    return
+                self.heal(target)
         else:
-            pass
-        # select move (attack, heal)
-        # select (enemy, ally)
-        # if attack, roll 0 to (Attack + 1) for attack
-        # and select enemy to attack
-
-        # if heal, roll 0 to Special_attack for healing amount
-        # and select ally to heal
-        pass
+            target = self.findWeakestCharacter(battle.allies)
+            if not target:
+                return
+            self.attack(target)
 
 
 def getStatsFromFileText(aFileTextLines: list):
