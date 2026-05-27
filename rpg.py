@@ -3,6 +3,8 @@ from enum import Enum
 import math
 import random
 
+XP_TO_LEVEL_UP = 3
+
 class BattleResult(Enum):
     AllyWins = 1
     EnemyWins = 2
@@ -29,6 +31,10 @@ class RpgBattle:
             if foe.isAlive():
                 return False
         return True
+    
+    def earn_xp(self, xp_to_add: int):
+        for ally in self.allies:
+            ally.add_xp(xp_to_add)
 
     def battle(self) -> BattleResult:
         # while both teams have characters alive
@@ -46,6 +52,8 @@ class RpgBattle:
         if allEnemiesDead and allAlliesDead:
             return BattleResult.BothLose
         elif allEnemiesDead:
+            # add XP here!
+            self.earn_xp(1)
             return BattleResult.AllyWins
         else:
             return BattleResult.EnemyWins
@@ -69,6 +77,11 @@ class Character:
         self.stamina = characterDict['Stamina']
         self.level = characterDict['Level']
         self.ally = characterDict['Ally']
+        self.xp = 0
+        self.xp_to_level_up = XP_TO_LEVEL_UP # amount of XP needed to get to next level
+
+    def __str__(self):
+        pass
 
     def isAlive(self):
         return self.hp > 0
@@ -114,6 +127,30 @@ class Character:
             if not target:
                 return
             self.attack(target)
+
+    def increase_stats(self, value_to_increase: int):
+        self.max_hp += value_to_increase
+        self.hp += value_to_increase
+        self.attack += value_to_increase
+        self.special_attack += value_to_increase
+        self.defence += value_to_increase
+        self.weapon_attack += value_to_increase
+        self.armor_defence += value_to_increase
+        self.mana += value_to_increase
+        self.stamina += value_to_increase
+
+    def level_up(self):
+        self.level += 1
+        self.increase_stats(1)
+        self.xp_to_level_up += XP_TO_LEVEL_UP
+
+        print(f"{self.name} has levelled up to {self.level}.\n")
+        print(self)
+
+    def add_xp(self, xp_to_add):
+        self.xp += xp_to_add
+        if self.xp >= self.xp_to_level_up:
+            self.level_up()
 
 
 def getStatsFromFileText(aFileTextLines: list):
