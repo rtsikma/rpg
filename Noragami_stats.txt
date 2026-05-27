@@ -1,12 +1,12 @@
-Name: Noragami
-Race: Rimekin
-Class: Healer
-Hp: 16
-Attack: 8
-Special_Attack: 16
-Defence: 12
-Weapon_Attack: 5
-Armor_Defence: 2
-Mana: 15
-Stamina: 8
-Level: 1
+Name = Noragami
+Race = Rimekin
+Class = Healer
+Hp = 16
+Attack = 8
+Special_Attack = 16
+Defence = 12
+Weapon_Attack = 5
+Armor_Defence = 2
+Mana = 15
+Stamina = 8
+Level = 1

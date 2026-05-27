@@ -1,12 +1,12 @@
-#Name: Goblin Brute
-#Race: Goblin
-#Class: Tank
-#Hp: 21
-#Attack: 8
-#Special_Attack: 8
-#Defence: 22
-#Weapon_Attack: 5
-#Armor_Defence: 2
-#Mana: 8
-#Stamina: 8
-#Level: 1
+Name = Goblin Brute
+Race = Goblin
+Class = Tank
+Hp = 21
+Attack = 8
+Special_Attack = 8
+Defence = 22
+Weapon_Attack = 5
+Armor_Defence = 2
+Mana = 8
+Stamina = 8
+Level = 1
