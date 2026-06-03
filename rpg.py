@@ -81,8 +81,23 @@ class Character:
         self.xp_to_level_up = XP_TO_LEVEL_UP # amount of XP needed to get to next level
 
     def __str__(self):
-        pass
-
+        return (
+        f"Name: {self.name}\n"
+        f"Class: {self.class_name}\n"
+        f"Race: {self.race}\n"
+        f"HP: {self.hp}\n"
+        f"Attack: {self.attack}\n"
+        f"Special Attack: {self.special_attack}\n"
+        f"Defense: {self.defence}\n"
+        f"Weapon Attack: {self.weapon_attack}\n"
+        f"Armor Defense: {self.armor_defence}\n"
+        f"Mana: {self.mana}\n"
+        f"Stamina: {self.stamina}\n"
+        f"Level: {self.level}\n"
+        f"Ally: {self.ally}\n"
+        f"XP: {self.xp}\n"
+        f"XP to Level Up: {self.xp_to_level_up}\n"
+        )
     def isAlive(self):
         return self.hp > 0
     
