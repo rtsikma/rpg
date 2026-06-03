@@ -1,12 +1,13 @@
-Name = Dwarf Miner
-Race = Shadow Dwarf
-Class = All Arounder
-Hp = 15
-Attack = 15
-Special_Attack = 8
-Defence = 15
-Weapon_Attack = 5
-Armor_Defence = 2
-Mana = 8
-Stamina = 14
-Level = 1
+Name: Dwarf Miner
+Race: Shadow Dwarf
+Class: All Arounder
+Hp: 15
+Attack: 15
+Special_Attack: 8
+Defence: 15
+Weapon_Attack: 5
+Armor_Defence: 2
+Mana: 8
+Stamina: 14
+Level: 1
+Ally: False

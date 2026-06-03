@@ -1,12 +1,13 @@
-Name = Link
-Race = Flamekin
-Class = Rogue
-HP = 11
-Attack = 25
-Defense = 11
-Weapon_Attack = 5
-Special_Attack = 8
-Armor_defense = 2
-Mana = 8
-Stamina = 12
-Level = 1
+Name: Link
+Race: Flamekin
+Class: Rogue
+Hp: 11
+Attack: 25
+Defence: 11
+Weapon_Attack: 5
+Special_Attack: 8
+Armor_Defence: 2
+Mana: 8
+Stamina: 12
+Level: 1
+Ally: True

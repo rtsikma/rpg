@@ -1,12 +1,13 @@
-name = Dark Hound
-Race = Bearfolk
-Class = tank
-HP = 18
-Attack = 10
-Defense = 16
-Weapon_Attack = 5
-Special Attk = 8
-Armor_defense = 2
-Mana = 8
-Stamina = 15
-Level = 1
+Name: Dark Hound
+Race: Bearfolk
+Class: tank
+Hp: 18
+Attack: 10
+Defence: 16
+Weapon_Attack: 5
+Special_Attack: 8
+Armor_Defence: 2
+Mana: 8
+Stamina: 15
+Level: 1
+Ally: False

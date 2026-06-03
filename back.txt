@@ -10,3 +10,4 @@ Armor_Defence: 4
 Mana: 10
 Stamina: 20
 Level: 2
+Ally: False

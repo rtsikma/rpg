@@ -4,6 +4,7 @@ import math
 import random
 
 XP_TO_LEVEL_UP = 3
+DEBUG = True
 
 class BattleResult(Enum):
     AllyWins = 1
@@ -38,7 +39,7 @@ class RpgBattle:
 
     def battle(self) -> BattleResult:
         # while both teams have characters alive
-        while not self.allAlliesDead() or not self.allEnemiesDead():
+        while not self.allAlliesDead() and not self.allEnemiesDead():
             for ally in self.allies:
                 if ally.isAlive():
                     ally.takeTurn(self)
@@ -47,6 +48,7 @@ class RpgBattle:
                 if foe.isAlive():
                     foe.takeTurn(self)
         
+        print("BATTLE IS OVER!")
         allEnemiesDead = self.allEnemiesDead()
         allAlliesDead = self.allAlliesDead()
         if allEnemiesDead and allAlliesDead:
@@ -66,17 +68,17 @@ class Character:
         self.name = characterDict['Name']
         self.class_name = characterDict['Class']
         self.race = characterDict['Race']
-        self.hp = characterDict['HP']
+        self.hp = int(characterDict['Hp'])
         self.max_hp = self.hp
-        self.attack = characterDict['Attack']
-        self.special_attack = characterDict['Special_Attack']
-        self.defence = characterDict['Defense']
-        self.weapon_attack = characterDict['Weapon_Attack']
-        self.armor_defence = characterDict['Armor_Defense']
-        self.mana = characterDict['Mana']
-        self.stamina = characterDict['Stamina']
-        self.level = characterDict['Level']
-        self.ally = characterDict['Ally']
+        self.attack_value = int(characterDict['Attack'])
+        self.special_attack = int(characterDict['Special_Attack'])
+        self.defence = int(characterDict['Defence'])
+        self.weapon_attack = int(characterDict['Weapon_Attack'])
+        self.armor_defence = int(characterDict['Armor_Defence'])
+        self.mana = int(characterDict['Mana'])
+        self.stamina = int(characterDict['Stamina'])
+        self.level = int(characterDict['Level'])
+        self.ally = characterDict['Ally'] == "True"
         self.xp = 0
         self.xp_to_level_up = XP_TO_LEVEL_UP # amount of XP needed to get to next level
 
@@ -86,11 +88,11 @@ class Character:
         f"Class: {self.class_name}\n"
         f"Race: {self.race}\n"
         f"HP: {self.hp}\n"
-        f"Attack: {self.attack}\n"
+        f"Attack: {self.attack_value}\n"
         f"Special Attack: {self.special_attack}\n"
-        f"Defense: {self.defence}\n"
+        f"Defence: {self.defence}\n"
         f"Weapon Attack: {self.weapon_attack}\n"
-        f"Armor Defense: {self.armor_defence}\n"
+        f"Armor Defence: {self.armor_defence}\n"
         f"Mana: {self.mana}\n"
         f"Stamina: {self.stamina}\n"
         f"Level: {self.level}\n"
@@ -98,17 +100,18 @@ class Character:
         f"XP: {self.xp}\n"
         f"XP to Level Up: {self.xp_to_level_up}\n"
         )
+    
     def isAlive(self):
         return self.hp > 0
     
     def attack(self, target):
         # if attack, roll 0 to (Attack + 1) for attack (attack + 1 is critical hit)
-        attackRoll = random.randint(0, self.attack + 1)
+        attackRoll = random.randint(0, self.attack_value + 1)
         # This is a Critical Hit!
-        if attackRoll == self.attack + 1:
+        if attackRoll == self.attack_value + 1:
             attackRoll = int(attackRoll * 1.5)
-        defenseRoll = random.randint(0, target.defence)
-        attackValue = attackRoll * self.weapon_attack / target.armor_defense - defenseRoll
+        defenceRoll = random.randint(0, target.defence)
+        attackValue = max(0, int(attackRoll * self.weapon_attack / target.armor_defence - defenceRoll))
         target.hp = max(target.hp - attackValue, 0)
         print(f"{self.name} ATTACKS {target.name} for {attackValue} HP. {target.name} now has {target.hp} HP.")
 
@@ -126,7 +129,7 @@ class Character:
 
     def takeTurn(self, battle: RpgBattle):
         if self.ally:
-            x = input("Attack (1) or Heal (2): ")
+            x = int(input("Attack (1) or Heal (2): "))
             if x == 1: # Attack
                 target = self.findWeakestCharacter(battle.enemies)
                 if not target:
@@ -146,7 +149,7 @@ class Character:
     def increase_stats(self, value_to_increase: int):
         self.max_hp += value_to_increase
         self.hp += value_to_increase
-        self.attack += value_to_increase
+        self.attack_value += value_to_increase
         self.special_attack += value_to_increase
         self.defence += value_to_increase
         self.weapon_attack += value_to_increase
@@ -177,13 +180,33 @@ def getStatsFromFileText(aFileTextLines: list):
         charDict[prop] = value
     return charDict
 
-dir_path = Path (".")
-for entry in dir_path.iterdir():
-    if entry.suffix == ".txt": # only process .txt files
-     with open(entry, 'r') as file:
-        print(f"Reading {entry.name}\n")
-        lines = file.readlines()
-        charDict = getStatsFromFileText(lines)
-        print(lines)
-        print("\n")
+def loadAllCharacters(path: str):
+    dir_path = Path (path)
+    for entry in dir_path.iterdir():
+        if entry.suffix == ".txt": # only process .txt files
+            file = open(entry, 'r')
+            if DEBUG:
+                print(f"Reading {entry.name}\n")
+            lines = file.readlines()
+            charDict = getStatsFromFileText(lines)
+            char = Character(charDict)
+            if char.ally:
+                allyList.append(char)
+            else:
+                enemyList.append(char)
+    if DEBUG:
+        print("Ally List:\n")
+        for ally in allyList:
+            print(ally)
+        print("\n\n\nEnemy List:\n")
+        for enemy in enemyList:
+            print(enemy)
+            
 
+def main():
+    loadAllCharacters(".")
+    battle = RpgBattle(allyList, enemyList[3:5])
+    battle.battle()
+
+if __name__ == '__main__':
+    main()
