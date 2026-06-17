@@ -1,10 +1,10 @@
 from pathlib import Path
 from enum import Enum
-import math
+import copy
 import random
 
 XP_TO_LEVEL_UP = 3
-DEBUG = True
+DEBUG = False
 
 class BattleResult(Enum):
     AllyWins = 1
@@ -15,6 +15,7 @@ class BattleResult(Enum):
 # Lists of characters
 allyList = []
 enemyList = []
+enemyListL2 = []
 
 class RpgBattle:
     def __init__(self, allies, enemies):
@@ -48,7 +49,7 @@ class RpgBattle:
                 if foe.isAlive():
                     foe.takeTurn(self)
         
-        print("BATTLE IS OVER!")
+        print("The battle is over.\n")
         allEnemiesDead = self.allEnemiesDead()
         allAlliesDead = self.allAlliesDead()
         if allEnemiesDead and allAlliesDead:
@@ -56,6 +57,7 @@ class RpgBattle:
         elif allEnemiesDead:
             # add XP here!
             self.earn_xp(1)
+            print("Link and Noragami are victorious!\n")
             return BattleResult.AllyWins
         else:
             return BattleResult.EnemyWins
@@ -126,17 +128,25 @@ class Character:
             return ()
         target = min(targets, key=lambda c: c.hp)
         return target
+    
+    def findWeakestForHealing(self, charList: list):
+        target = min(charList, key=lambda c: c.hp)
+        return target
 
     def takeTurn(self, battle: RpgBattle):
         if self.ally:
-            x = int(input("Attack (1) or Heal (2): "))
+            strX = input(f"{self.name}: Attack (1) or Heal (2): ")
+            if (strX == ""):
+                print("Invalid Input\n")
+                strX = input(f"{self.name}: Attack (1) or Heal (2): ")
+            x = int(strX)
             if x == 1: # Attack
                 target = self.findWeakestCharacter(battle.enemies)
                 if not target:
                     return
                 self.attack(target)
             if x == 2: # Heal        
-                target = self.findWeakestCharacter(battle.allies)
+                target = self.findWeakestForHealing(battle.allies)
                 if not target:
                     return
                 self.heal(target)
@@ -148,7 +158,7 @@ class Character:
 
     def increase_stats(self, value_to_increase: int):
         self.max_hp += value_to_increase
-        self.hp += value_to_increase
+        self.hp = self.max_hp
         self.attack_value += value_to_increase
         self.special_attack += value_to_increase
         self.defence += value_to_increase
@@ -193,7 +203,10 @@ def loadAllCharacters(path: str):
             if char.ally:
                 allyList.append(char)
             else:
-                enemyList.append(char)
+                if char.level > 1:
+                    enemyListL2.append(char)
+                else:
+                    enemyList.append(char)
     if DEBUG:
         print("Ally List:\n")
         for ally in allyList:
@@ -201,12 +214,89 @@ def loadAllCharacters(path: str):
         print("\n\n\nEnemy List:\n")
         for enemy in enemyList:
             print(enemy)
-            
+
+class StoryItem:
+    def __init__(self, description:str, enemies:int, level=1):
+        self.description = description
+        self.enemies = enemies
+        self.enemy_level = level
+    
+    def showStory(self):
+        print(self.description)
+        if self.enemy_level == 1:
+            enemies = copy.deepcopy(enemyList[0:self.enemies])
+        else:
+            enemies = enemyListL2
+        if len(enemies) > 0:
+            battle = RpgBattle(allyList, enemies)
+            result = battle.battle()
+            input("Press Enter to continue")
+            return result
+        
+        return BattleResult.AllyWins
+
+def createStory():
+    desc1 = """
+Link and Noragami are aimlessly walking along in a dangerous and spooky woods.
+They are discussing deep and serious matters (for teenagers).
+Suddenly they are attacked by a mysterious enemy.
+"""
+    desc2 = """
+After successfully defeating their attacker, Link and Noragami continue to wander aimlessly.
+They continue their deep and serious discussion (for teenagers).
+Their discussions include what they would do if they won the lottery, and plans for world domination.
+Just when they were finalizing their plans, 2 enemies confronted them.
+"""
+    desc3 = """
+With their attackers now lying in pools of their own blood, Link and Noragami continue their aimless wanderings.
+Due to the stress of their battle, they have forgotten all of their world domination plans, and must begin again.
+The new plans are even better than their first ones. They were just discussing how to properly buy the lottery, when they again were attacked by 2 enemies.
+"""
+    desc4 = """
+Now that the attackers were vanquished by the skilled warriors, Link and Noragami again resumed their world domination plans. Unfortunately, they have forgotten their world domination plans again.
+Thus, they decided that they should first figure out how to get rich, then work on the world domination plans, since they would need lots of money to implement any plans they would inevitably come up with.
+They were coming into a clearing just as they were finalizing their get-rich schemes. As they entered the clearing, 3 enemies jumped out from behind a rock to attack them.
+"""
+    desc5 = """
+Even though they conquered their foes, Link and Noragami again forgot all of their plans.
+They continued their fooling aimless wandering deeper into the dangerous and spooky woods.
+Just as they were again finalizing they improved get-rich schemes, they were again ambushed by a group of enemies
+"""
+    desc6 = """
+After the battle finished, Link and Noragami realized that their plans were all forgotten again. They decided to write their plans down, so they wouldn't forgot them.
+Because they had done this several times already, the plans Link and Noragami came up with this time were better than ever - fool-proof, even. With their plans written down, they moved confidently forward.
+As they moved along the path, 4 enemies jumped out of the woods and began to attack them.
+"""
+    desc7 = """
+After the long, gruelling battle, Link and Noragami again forgot all of the plans they made. Unfortunately, their written plans were dropped during the battle. Despite being attacked 6 times, the 2 friends continued walking deeper into the dark and spooky woods.
+Since they had forgotten all of their previous plans, they decided to move on from world domination plans and get-rich schemes to Link's new computer that he is hoping to build.
+After several minutes of discussing the desired specs, they suddenly felt an overpowering sense of dread. They had come to the center of the forest. In front of them was a huge menacing figure.
+"You have defeated all my underlings!", the figure said, "Now I will have to take care you my self!"
+"""
+    desc8 = """
+After defeating the huge warrior, Link and Noragami decided that the dark and spooky forest was no place them.
+They quickly retraced their steps out of the forest, completely forgetting about their plans for world domination and get-rich schemes that were dropped on the forest floor. Link and Noragami decided to go to Link's house to play Pokemon.
+"""
+    storyList = (
+        StoryItem(desc1, 1),
+        StoryItem(desc2, 2),
+        StoryItem(desc3, 2),
+        StoryItem(desc4, 2),
+        StoryItem(desc5, 3),
+        StoryItem(desc6, 4),
+        StoryItem(desc7, 1, 2),
+        StoryItem(desc8, 0)
+    )
+
+    for story in storyList:
+        result = story.showStory()
+        if result == BattleResult.EnemyWins:
+            print("\n\nLink and Noragami perished while aimlessly wandering around a dark and spooky forest")
+            break
 
 def main():
     loadAllCharacters(".")
-    battle = RpgBattle(allyList, enemyList[3:5])
-    battle.battle()
+    createStory()
 
 if __name__ == '__main__':
     main()
