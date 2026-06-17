@@ -1,8 +1,8 @@
 Name: Link
 Race: Flamekin
 Class: Rogue
-Hp: 11
-Attack: 25
+Hp: 16
+Attack: 20
 Defence: 11
 Weapon_Attack: 5
 Special_Attack: 8
