@@ -109,12 +109,14 @@ class Character:
     def attack(self, target):
         # if attack, roll 0 to (Attack + 1) for attack (attack + 1 is critical hit)
         attackRoll = random.randint(0, self.attack_value + 1)
-        # This is a Critical Hit!
-        if attackRoll == self.attack_value + 1:
+        bIsCriticalHit = attackRoll == self.attack_value + 1
+        if bIsCriticalHit:
             attackRoll = int(attackRoll * 1.5)
         defenceRoll = random.randint(0, target.defence)
         attackValue = max(0, int(attackRoll * self.weapon_attack / target.armor_defence - defenceRoll))
         target.hp = max(target.hp - attackValue, 0)
+        strCrit = " *CRITICAL HIT*" if bIsCriticalHit else ""
+        print(f"Attack roll: {attackRoll}{strCrit}, Defense Roll: {defenceRoll}")
         print(f"{self.name} ATTACKS {target.name} for {attackValue} HP. {target.name} now has {target.hp} HP.")
 
     def heal(self, target):
@@ -135,11 +137,16 @@ class Character:
 
     def takeTurn(self, battle: RpgBattle):
         if self.ally:
-            strX = input(f"{self.name}: Attack (1) or Heal (2): ")
-            if (strX == ""):
-                print("Invalid Input\n")
+            x = 0
+            while (True):
                 strX = input(f"{self.name}: Attack (1) or Heal (2): ")
-            x = int(strX)
+                try:
+                    x = int(strX)
+                except ValueError:
+                    pass
+                if x != 1 or x != 2:
+                    break
+                print("Invalid input. Please try again...\n")
             if x == 1: # Attack
                 target = self.findWeakestCharacter(battle.enemies)
                 if not target:
@@ -226,7 +233,7 @@ class StoryItem:
         if self.enemy_level == 1:
             enemies = copy.deepcopy(enemyList[0:self.enemies])
         else:
-            enemies = enemyListL2
+            enemies = [copy.deepcopy(enemyListL2[self.enemies])]
         if len(enemies) > 0:
             battle = RpgBattle(allyList, enemies)
             result = battle.battle()
@@ -282,9 +289,9 @@ They quickly retraced their steps out of the forest, completely forgetting about
         StoryItem(desc2, 2),
         StoryItem(desc3, 2),
         StoryItem(desc4, 2),
-        StoryItem(desc5, 3),
-        StoryItem(desc6, 4),
-        StoryItem(desc7, 1, 2),
+        StoryItem(desc5, 0, 2),
+        StoryItem(desc6, 1, 2),
+        StoryItem(desc7, 2, 2),
         StoryItem(desc8, 0)
     )
 
