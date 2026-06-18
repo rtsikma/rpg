@@ -1,0 +1,13 @@
+Name: Flappy
+Race: Dodo bird 
+Class: Mage
+Hp: 12
+Attack: 10
+Special_Attack: 20
+Defence: 16
+Weapon_Attack: 7
+Armor_Defence: 4
+Mana: 14
+Stamina: 20
+Level: 2
+Ally: False

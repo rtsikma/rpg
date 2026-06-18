@@ -1,0 +1,13 @@
+Name: dougdoug
+Race: hobbit
+Class: bard
+Hp: 8
+Attack: 8
+Special_Attack: 8
+Defence: 36
+Weapon_Attack: 7
+Armor_Defence: 4
+Mana: 8
+Stamina: 20
+Level: 2
+Ally: False

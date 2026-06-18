@@ -1,0 +1,13 @@
+Name: Boris
+Race: Sharkfolk
+Class: Tank
+Hp: 21
+Attack: 30
+Special_Attack: 8
+Defence: 18
+Weapon_Attack: 7
+Armor_Defence: 4
+Mana: 10
+Stamina: 5
+Level: 2
+Ally: False

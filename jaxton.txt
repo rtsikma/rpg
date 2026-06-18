@@ -1,0 +1,13 @@
+Name:Jaxton
+Race:TimHorton Worker
+Class:Bandit
+Hp: 8
+Attack: 3
+Special_Attack: 8
+Defence: 8
+Weapon_Attack: 7
+Armor_Defence: 4
+Mana: 18
+Stamina: 8
+Level: 2
+Ally: False

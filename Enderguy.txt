@@ -1,0 +1,13 @@
+Name: Enderguy
+Race: Enderkin
+Class: archer
+Hp: 15
+Attack: 27
+Special_Attack: 10
+Defence: 8
+Weapon_Attack: 7
+Armor_Defence: 4
+Mana: 8
+Stamina: 24
+Level: 2
+Ally: False
